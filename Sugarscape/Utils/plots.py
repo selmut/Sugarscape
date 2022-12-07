@@ -2,6 +2,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import glob
 import os
+import numpy as np
 
 
 # plots a given generation's grid matrix and saves the image
@@ -57,7 +58,7 @@ def plot_sugar_hist(sugar0_dict, sugar20_dict, sugar40_dict, sugar60_dict, sugar
     n60 = sugar60_dict.values()
     n80 = sugar80_dict.values()
 
-    plt.figure()
+    fig = plt.figure()
     plt.title('Wealth distribution')
     plt.ylabel('n')
     plt.xlabel('Wealth')
@@ -69,7 +70,40 @@ def plot_sugar_hist(sugar0_dict, sugar20_dict, sugar40_dict, sugar60_dict, sugar
     plt.bar(sugar80, n80, color='mediumvioletred')
     plt.legend(['t=0', 't=20', 't=40', 't=60', 't=80'])
     plt.savefig('graphics/img/distributions/sugar.png')
+    plt.close(fig)
 
+
+def plot_lorentz(lorentz0, lorentz20, lorentz40, lorentz60, lorentz80):
+    indexes0 = np.arange(0, len(lorentz0), step=1)
+    indexes20 = np.arange(0, len(lorentz20), step=1)
+    indexes40 = np.arange(0, len(lorentz40), step=1)
+    indexes60 = np.arange(0, len(lorentz60), step=1)
+    indexes80 = np.arange(0, len(lorentz80), step=1)
+
+    fig = plt.figure()
+    plt.plot(indexes0/indexes0[-1], lorentz0/lorentz0[-1], color='mediumslateblue')
+    plt.plot(indexes20/indexes20[-1], lorentz20/lorentz20[-1], color='greenyellow')
+    plt.plot(indexes40/indexes40[-1], lorentz40/lorentz40[-1], color='turquoise')
+    plt.plot(indexes60/indexes60[-1], lorentz60/lorentz60[-1], color='orange')
+    plt.plot(indexes80/indexes80[-1], lorentz80/lorentz80[-1], color='mediumvioletred')
+    plt.xlabel('$F_i/Q$')
+    plt.ylabel('$L_i/Q$')
+    plt.title('Lorentz curve')
+    plt.legend(['t=0', 't=20', 't=40', 't=60', 't=80'])
+    plt.savefig('graphics/img/distributions/lorentz.png')
+    plt.close(fig)
+
+
+def plot_gini(gini, timeSteps):
+    indexes = np.arange(0, timeSteps, step=1)
+
+    fig = plt.figure()
+    plt.plot(indexes, gini, color='mediumslateblue')
+    plt.xlabel('$n$')
+    plt.ylabel('$G(n)$')
+    plt.title('Gini coefficient (without inheritance)')
+    plt.savefig('graphics/img/distributions/gini.png')
+    plt.close(fig)
 
 def plot_meta_hist(meta_dict0, meta_dict_end):
     visions0 = list(meta_dict0.keys())

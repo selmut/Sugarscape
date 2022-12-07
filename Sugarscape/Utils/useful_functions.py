@@ -44,3 +44,28 @@ def clear_dir(directory, extension):
     files = glob.glob(directory+'/*'+extension)
     for f in files:
         os.remove(f)
+
+
+def lorentz(value_dict):
+    wealths = []
+
+    for key in value_dict.keys():
+        for n in range(int(value_dict[key])):
+            wealths.append(key)
+
+    sorted_values = np.sort(np.array(wealths))
+    summed_values = np.cumsum(sorted_values)
+    return summed_values
+
+
+def gini(lorentz):
+    lorentz_normed = lorentz/lorentz[-1]
+    indexes = np.arange(0, len(lorentz))
+    indexes = indexes/indexes[-1]
+
+    triangle = 1/2
+    trapz = np.trapz(lorentz_normed, indexes)
+
+    gini_vals = 2*(triangle-trapz)
+    return gini_vals
+

@@ -115,4 +115,11 @@ class Agents:
         self.init_age()
         self.init_pos(rows, cols)
 
+    def init_agent_inheritance(self, rows, cols, m, v, age):
+        self.v = v
+        self.m = m
+        self.init_wealth()
+        self.max_age = age
+        self.init_pos(rows, cols)
+
 
