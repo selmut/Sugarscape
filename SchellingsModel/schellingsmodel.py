@@ -159,10 +159,10 @@ class SchellingsModel:
                         row_i = i[0]
                         col_i = i[1]
 
-                        if agents_grid[row_i, col_i] == 1:
+                        if grid[row_i, col_i] == 1:
                             current_happiness_A += 1
                             current_happiness_total += 1
-                        elif agents_grid[row_i, col_i] == 100:
+                        elif grid[row_i, col_i] == 100:
                             current_happiness_B += 1
                             current_happiness_total += 1
 
@@ -193,7 +193,10 @@ class SchellingsModel:
         return all_grids
 
     def run_happiness(self, all_grids):
+        timeSteps = self.timeSteps
         happiness_A, happiness_B, happiness_total = self.compute_happiness(all_grids)
+
+        plot_happiness(happiness_A, happiness_B, happiness_total, timeSteps)
 
         happiness_A.tofile('csv/happiness_A.csv', sep=',', format='%10.5f')
         happiness_B.tofile('csv/happiness_B.csv', sep=',', format='%10.5f')

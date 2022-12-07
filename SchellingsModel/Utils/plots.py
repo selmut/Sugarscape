@@ -36,6 +36,7 @@ def plot_schellings(to_plot, time, name):
     plt.savefig('graphics/img/schelling/'+name+str(time)+'.png', bbox_inches='tight')
     plt.close(fig)
 
+
 def plot_happiness(happiness_A, happiness_B, happiness_total, timeSteps):
     times = np.arange(0, timeSteps, step=1)
     fig = plt.figure()
