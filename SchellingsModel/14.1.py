@@ -9,4 +9,5 @@ agentsB = int((houses/2)*(1-f))
 
 model = SchellingsModel(N, agentsA, agentsB, 10**5)
 model.run_model()
+print('')
 
