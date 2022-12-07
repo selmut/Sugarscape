@@ -183,19 +183,17 @@ class SchellingsModel:
         for t in range(timeSteps):
             agents_grid = self.move(agents_grid)
             all_grids[:,:,t] = agents_grid
-            plot_schellings(agents_grid, t + 1, 'schellings_grid')
 
+            if (t+1) % 1000 == 0:
+                plot_schellings(agents_grid, t + 1, 'schellings_grid')
             if (t + 1) % 100 == 0:
                 print('Time step: ' + str(t + 1))
-
-        all_grids.tofile('csv/all_grids.csv', sep=',', format='%10.5f')
         make_gif('graphics/img/schelling', 'schellingsmodel')
 
-    def run_happiness(self):
-        all_grids = np.genfromtxt('csv/all_grids.csv', delimiter=',')
+        return all_grids
+
+    def run_happiness(self, all_grids):
         happiness_A, happiness_B, happiness_total = self.compute_happiness(all_grids)
-
-
 
         happiness_A.tofile('csv/happiness_A.csv', sep=',', format='%10.5f')
         happiness_B.tofile('csv/happiness_B.csv', sep=',', format='%10.5f')

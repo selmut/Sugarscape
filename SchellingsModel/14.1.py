@@ -7,7 +7,8 @@ houses = N**2
 agentsA = int((houses/2)*(1-f))
 agentsB = int((houses/2)*(1-f))
 
-model = SchellingsModel(N, agentsA, agentsB, 10**5)
-model.run_model()
-print('')
+model = SchellingsModel(N, agentsA, agentsB, 10)
+all_grids = model.run_model()
+model.run_happiness(all_grids)
+
 

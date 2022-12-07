@@ -26,7 +26,7 @@ def plot_schellings(to_plot, time, name):
     #plt.style.use('dark_background')
     plt.xticks([])
     plt.yticks([])
-    plt.title('Time step: '+str(time))
+    plt.title('Schelling\'s model')
     cmap = {1: colors.to_rgb('midnightblue'), 100: colors.to_rgb('lavender'), 0: colors.to_rgb('dimgray')}
     labels = {1: 'Family A', 100: 'Family B', 0: 'Empty house'}
     to_show = np.array([[cmap[i] for i in j] for j in to_plot])
