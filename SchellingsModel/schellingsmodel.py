@@ -88,10 +88,7 @@ class SchellingsModel:
         return agents_grid
 
     def anti_gregarious_move(self, agents_grid):
-        agentsA = self.agentsA
-        agentsB = self.agentsB
         N = self.N
-        moving_events = 0
 
         row, col = np.random.randint(0, N), np.random.randint(0, N)
         agent_type = agents_grid[row, col]
@@ -113,7 +110,6 @@ class SchellingsModel:
                 i = np.random.randint(0, len(rows_empty))
                 agents_grid[row, col] = 0
                 agents_grid[rows_empty[i], cols_empty[i]] = 1
-                moving_events += 1
 
         if agent_type == 100:
             neighbourhood_indexes = moore_neighbourhood(N, row, col)
@@ -131,7 +127,6 @@ class SchellingsModel:
                 i = np.random.randint(0, len(rows_empty))
                 agents_grid[row, col] = 0
                 agents_grid[rows_empty[i], cols_empty[i]] = 100
-                moving_events += 1
 
         return agents_grid
 
@@ -141,8 +136,15 @@ class SchellingsModel:
         happiness_total = np.zeros(timeSteps)
         happiness_A = np.zeros(timeSteps)
         happiness_B = np.zeros(timeSteps)
+        agentsA = self.agentsA
+        agentsB = self.agentsB
+        agents = agentsA+agentsB
 
         for t in range(timeSteps):
+            if t % 1000 != 0:
+                continue
+            print('Time step: '+str(t))
+
             grid = all_grids[:, :, t]
 
             current_happiness_A = 0
@@ -159,18 +161,43 @@ class SchellingsModel:
                         row_i = i[0]
                         col_i = i[1]
 
-                        if grid[row_i, col_i] == 1:
-                            current_happiness_A += 1
-                            current_happiness_total += 1
-                        elif grid[row_i, col_i] == 100:
-                            current_happiness_B += 1
-                            current_happiness_total += 1
+                        if agent_type == 1:
+                            if grid[row_i, col_i] == 1:
+                                current_happiness_A += 1
+                                current_happiness_total += 1
+                        elif agent_type == 100:
+                            if grid[row_i, col_i] == 100:
+                                current_happiness_B += 1
+                                current_happiness_total += 1
 
                     happiness_A[t] = current_happiness_A/len(neighbourhood_indexes)
                     happiness_B[t] = current_happiness_B / len(neighbourhood_indexes)
                     happiness_total[t] = current_happiness_total / len(neighbourhood_indexes)
 
-        return happiness_A, happiness_B, happiness_total
+        return (happiness_A[np.where(happiness_A != 0)]/agentsA)/np.max(happiness_A/agentsA), \
+            (happiness_B[np.where(happiness_B != 0)]/agentsB)/np.max(happiness_B/agentsB), \
+            (happiness_total[np.where(happiness_total != 0)]/agents)/np.max(happiness_total/agents)
+
+    def compute_moving_events(self, all_grids):
+        timeSteps = self.timeSteps
+        N = self.N
+        moving_events = np.zeros(timeSteps)
+        agents = self.agentsA+self.agentsB
+
+        for t in range(timeSteps+1):
+            if t % 1001 != 0:
+                continue
+
+            grid = all_grids[:, :, t]
+            prev_grid = all_grids[:, :, t-1000]
+            current_moving_events = 0
+
+            for row in range(N):
+                for col in range(N):
+                    if grid[row, col] != prev_grid[row, col]:
+                        current_moving_events += 1
+            moving_events[t] = current_moving_events
+        return moving_events[np.where(moving_events != 0)]/agents
 
     def run_model(self):
         timeSteps = self.timeSteps
@@ -182,11 +209,11 @@ class SchellingsModel:
 
         for t in range(timeSteps):
             agents_grid = self.move(agents_grid)
-            all_grids[:,:,t] = agents_grid
+            all_grids[:, :, t] = agents_grid
 
-            if (t+1) % 1000 == 0:
+            if (t+1) % 500 == 0:
                 plot_schellings(agents_grid, t + 1, 'schellings_grid')
-            if (t + 1) % 100 == 0:
+            if (t + 1) % 10000 == 0:
                 print('Time step: ' + str(t + 1))
         make_gif('graphics/img/schelling', 'schellingsmodel')
 
@@ -195,8 +222,9 @@ class SchellingsModel:
     def run_happiness(self, all_grids):
         timeSteps = self.timeSteps
         happiness_A, happiness_B, happiness_total = self.compute_happiness(all_grids)
+        moving_events = self.compute_moving_events(all_grids)
 
-        plot_happiness(happiness_A, happiness_B, happiness_total, timeSteps)
+        plot_happiness(happiness_A, happiness_B, happiness_total, moving_events, timeSteps)
 
         happiness_A.tofile('csv/happiness_A.csv', sep=',', format='%10.5f')
         happiness_B.tofile('csv/happiness_B.csv', sep=',', format='%10.5f')
