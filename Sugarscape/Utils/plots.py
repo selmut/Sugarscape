@@ -7,10 +7,8 @@ import os
 # plots a given generation's grid matrix and saves the image
 def plot_living_area(area, agents_x, agents_y, img_loc, t):
     fig = plt.figure()
-    plt.style.use('dark_background')
-    # GnBu_r
-    plt.imshow(area, cmap='copper', alpha=1)
-    plt.scatter(agents_x, agents_y, c='mediumslateblue', s=30, alpha=1, edgecolors='darkslateblue', linewidths=0.1)
+    plt.imshow(area, cmap='Greys', vmax=5)
+    plt.scatter(agents_x, agents_y, c='black', s=10)
     plt.xticks([])
     plt.yticks([])
     plt.title('Time step: '+str(t))
@@ -20,7 +18,7 @@ def plot_living_area(area, agents_x, agents_y, img_loc, t):
 
 def scatter_agents(agents_x, agents_y, img_loc, t):
     fig = plt.figure()
-    plt.style.use('dark_background')
+    #plt.style.use('dark_background')
     plt.scatter(agents_x, agents_y, c='mediumslateblue', s=30, alpha=1, edgecolors='darkslateblue', linewidths=0.1)
     plt.xticks([])
     plt.yticks([])

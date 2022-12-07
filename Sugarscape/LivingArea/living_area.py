@@ -65,24 +65,24 @@ class LivingArea:
 
         for x in range(cols):
             for y in range(rows):
-                if compute_distance(x, x0_peak1, y, y0_peak1) <= d1 and sugar_grid[x, y]<1:
-                    out[y, x] += 1
-                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d1 and sugar_grid[x, y]<1:
-                    out[y, x] += 1
+                if compute_distance(x, x0_peak1, y, y0_peak1) <= d4 and sugar_grid[y, x] < 4:
+                    sugar_grid[y, x] += 1
+                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d4 and sugar_grid[y, x] < 4:
+                    sugar_grid[y, x] += 1
 
-                if compute_distance(x, x0_peak1, y, y0_peak1) <= d2 and sugar_grid[x, y]<2:
-                    out[y, x] += 1
-                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d2 and sugar_grid[x, y]<2:
-                    out[y, x] += 1
+                elif compute_distance(x, x0_peak1, y, y0_peak1) <= d3 and sugar_grid[y, x] < 3:
+                    sugar_grid[y, x] += 1
+                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d3 and sugar_grid[y, x] < 3:
+                    sugar_grid[y, x] += 1
 
-                if compute_distance(x, x0_peak1, y, y0_peak1) <= d3 and sugar_grid[x, y]<3:
-                    out[y, x] += 1
-                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d3 and sugar_grid[x, y]<3:
-                    out[y, x] += 1
+                elif compute_distance(x, x0_peak1, y, y0_peak1) <= d2 and sugar_grid[y, x] < 2:
+                    sugar_grid[y, x] += 1
+                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d2 and sugar_grid[y, x] < 2:
+                    sugar_grid[y, x] += 1
 
-                if compute_distance(x, x0_peak1, y, y0_peak1) <= d4 and sugar_grid[x, y]<4:
-                    out[y, x] += 1
-                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d4 and sugar_grid[x, y]<4:
-                    out[y, x] += 1
-        return np.add(sugar_grid, out*sugar_growth)
+                elif compute_distance(x, x0_peak1, y, y0_peak1) <= d1 and sugar_grid[y, x] < 1:
+                    sugar_grid[y, x] += 1
+                elif compute_distance(x, x0_peak2, y, y0_peak2) <= d1 and sugar_grid[y, x] < 1:
+                    sugar_grid[y, x] += 1
+        return sugar_grid
 

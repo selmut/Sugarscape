@@ -37,19 +37,20 @@ def plot_schellings(to_plot, time, name):
     plt.close(fig)
 
 
-def plot_happiness(happiness_A, happiness_B, happiness_total, moving_events, timeSteps):
+def plot_happiness(happiness_A, happiness_B, happiness_total, moving_events, moving_times, timeSteps):
     times = np.arange(0, timeSteps, step=1000)
     fig = plt.figure()
     plt.plot(times, happiness_A, 'mediumslateblue', linewidth=2)
     plt.plot(times, happiness_B, 'turquoise', linewidth=2)
     plt.plot(times, happiness_total, 'mediumvioletred', linewidth=2)
-    plt.scatter(times, moving_events, c='k', s=5)
+    plt.scatter(moving_times, moving_events, c='k', s=5)
     plt.ylabel('p')
     plt.xlabel('time')
     plt.title('Happiness scores')
     plt.legend(['happiness (A)', 'happiness (B)', 'happiness (total)'])
     plt.savefig('graphics/img/happiness/happiness.png')
     plt.close(fig)
+
 
 def make_gif(img_loc, name):
     # clear_dir(img_loc, '.png')

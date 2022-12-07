@@ -14,19 +14,18 @@ class Agents:
         # metabolic rates
         self.m = None
 
-        # sugar capacity
-        self.sugar_cap = None
-        self.wealth = 0
+        # sugar level
+        self.wealth = None
 
     # setters
     def init_vision_range(self):
         self.v = np.random.randint(1, 7)
 
     def init_metabolic_rate(self):
-        self.m = np.random.randint(0, 4)
+        self.m = np.random.randint(1, 5)
 
-    def init_sugar_capacity(self):
-        self.sugar_cap = np.random.randint(5, 26)
+    def init_wealth(self):
+        self.wealth = np.random.randint(5, 26)
 
     def init_pos(self, rows, cols):
         self.x = np.random.randint(0, cols)
@@ -52,14 +51,44 @@ class Agents:
     def get_metabolic_rate(self):
         return self.m
 
-    def get_sugar_capacity(self):
-        return self.sugar_cap
-
-
-    def move(self, sugar_grid):
+    def get_vision_range(self, sugar_grid):
         v = self.get_vision()
         x, y = self.get_pos()
-        sugar_cap = self.get_sugar_capacity()
+        rows, cols = np.shape(sugar_grid)
+
+        vision_range = []
+
+        for n in range(v+1):
+            i = n+1
+            if (y+i) < rows:
+                vision_range.append((y+i, x))
+            if (x+i) < cols:
+                vision_range.append((y, x+i))
+            if (y-i) > 0:
+                vision_range.append((y-i, x))
+            if (x-i) > 0:
+                vision_range.append((y, x-i))
+        return vision_range
+
+    def move(self, sugar_grid):
+        vision_range = self.get_vision_range(sugar_grid)
+
+        max_sugar = 0
+
+        for coord in vision_range:
+            y_vis, x_vis = coord[0], coord[1]
+
+            if sugar_grid[y_vis, x_vis] >= max_sugar:
+                max_sugar = sugar_grid[y_vis, x_vis]
+                max_x, max_y = x_vis, y_vis
+
+        self.wealth += sugar_grid[max_y, max_x]
+        sugar_grid[max_y, max_x] -= sugar_grid[max_y, max_x]
+        self.set_new_pos(max_x, max_y)
+
+    def move2(self, sugar_grid):
+        v = self.get_vision()
+        x, y = self.get_pos()
         chosen_move = np.random.randint(0, 4)
         rows, cols = np.shape(sugar_grid)
 
@@ -67,8 +96,8 @@ class Agents:
         if chosen_move == 0:
             for i in range(v):
                 if y+i < cols and sugar_grid[x, y+i] != 0:
-                    self.wealth += np.minimum(sugar_grid[x, y+i], sugar_cap-self.wealth)
-                    sugar_grid[x, y+i] -= np.minimum(sugar_grid[x, y+i], sugar_cap-self.wealth)
+                    self.wealth += sugar_grid[x, y+i]
+                    sugar_grid[x, y+i] -= sugar_grid[x, y+i]
                     self.set_new_pos(x, y+i)
                     break
             if y+v < cols and sugar_grid[x, y+v] == 0:
@@ -78,8 +107,8 @@ class Agents:
         elif chosen_move == 1:
             for i in range(v):
                 if x+i < rows and sugar_grid[x+i, y] != 0:
-                    self.wealth += np.minimum(sugar_grid[x+i, y], sugar_cap-self.wealth)
-                    sugar_grid[x+i, y] -= np.minimum(sugar_grid[x+i, y], sugar_cap-self.wealth)
+                    self.wealth += sugar_grid[x+i, y]
+                    sugar_grid[x+i, y] -= sugar_grid[x+i, y]
                     self.set_new_pos(x+i, y)
                     break
             if x+v < rows and sugar_grid[x+v, y] == 0:
@@ -89,8 +118,8 @@ class Agents:
         elif chosen_move == 2:
             for i in range(v):
                 if y-i > 0 and sugar_grid[x, y-i] != 0:
-                    self.wealth += np.minimum(sugar_grid[x, y-i], sugar_cap-self.wealth)
-                    sugar_grid[x, y-i] -= np.minimum(sugar_grid[x, y-i], sugar_cap-self.wealth)
+                    self.wealth += sugar_grid[x, y-i]
+                    sugar_grid[x, y-i] -= sugar_grid[x, y-i]
                     self.set_new_pos(x, y-i)
                     break
             if y-v > 0 and sugar_grid[x, y-v] == 0:
@@ -100,8 +129,8 @@ class Agents:
         elif chosen_move == 3:
             for i in range(v):
                 if x-i > 0 and sugar_grid[x-i, y] != 0:
-                    self.wealth += np.minimum(sugar_grid[x-i, y], sugar_cap-self.wealth)
-                    sugar_grid[x-i, y] -= np.minimum(sugar_grid[x-i, y], sugar_cap-self.wealth)
+                    self.wealth += sugar_grid[x-i, y]
+                    sugar_grid[x-i, y] -= sugar_grid[x-i, y]
                     self.set_new_pos(x-i, y)
                     break
             if x-v > 0 and sugar_grid[x-v, y] == 0:
@@ -120,7 +149,7 @@ class Agents:
     def init_agent(self, rows, cols):
         self.init_vision_range()
         self.init_metabolic_rate()
-        self.init_sugar_capacity()
+        self.init_wealth()
         self.init_pos(rows, cols)
 
 
