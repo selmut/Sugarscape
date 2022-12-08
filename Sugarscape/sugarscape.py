@@ -150,9 +150,9 @@ class Sugarscape:
             plot_living_area(area, agents_x, agents_y, 'graphics/img/sugarscape_all', self.t)
             scatter_agents(agents_x, agents_y, 'graphics/img/sugarscape_agents', self.t)
 
-            sugar_val = self.get_current_sugar_level(agents_dict)
+            '''sugar_val = self.get_current_sugar_level(agents_dict)
             lorentz_val = lorentz(sugar_val)
-            gini_values[t] = gini(lorentz_val)
+            gini_values[t] = gini(lorentz_val)'''
 
             if (t+1) % 50 == 0:
                 print('--- Time step: '+str(t+1)+' ---')
